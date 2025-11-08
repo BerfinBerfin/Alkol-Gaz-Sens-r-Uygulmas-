@@ -1,0 +1,39 @@
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+int mq3Pin = A0;
+int ledPin = 13;
+int buzzerPin = 8;
+
+void setup() {
+  Serial.begin(9600);
+  lcd.init();
+  lcd.backlight();
+  pinMode(ledPin, OUTPUT);
+  pinMode(buzzerPin, OUTPUT);
+  lcd.setCursor(0, 0);
+  lcd.print("Alkol Sensoru");
+  delay(1000);
+}
+
+void loop() {
+  int sensorValue = analogRead(mq3Pin);
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Deger: ");
+  lcd.print(sensorValue);
+
+  if (sensorValue > 400) {
+    digitalWrite(ledPin, HIGH);
+    digitalWrite(buzzerPin, HIGH);
+    lcd.setCursor(0, 1);
+    lcd.print("UYARI! ALKOL YUKSEK");
+  } else {
+    digitalWrite(ledPin, LOW);
+    digitalWrite(buzzerPin, LOW);
+    lcd.setCursor(0, 1);
+    lcd.print("Seviye Normal");
+  }
+
+  delay(1000);
+}
